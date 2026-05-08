@@ -76,3 +76,11 @@ groovy clean-mvn-repository.groovy
     - Send text at start: DEST='`port`|`ip`' JUMP='`port`|`user`|`ip`|`passwd`' ssh_tunnel.exp
 4. 在 iTerm 中打开隧道连接
 5. 打开 SFTP 客户端，并配置 FTP 连接： `ftp://localhost:$local_port`
+
+## uhost.sh
+
+用于 macOS 中更新 hosts 文件中的 github 地址
+
+1. 将 `uhost.sh` 脚本文件放到 `/usr/local/bin` 目录
+2. 授权：`chmod a+x uhost.sh`
+3. 在命令行中运行：`uhost`, 即可完成更新
