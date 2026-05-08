@@ -1,0 +1,59 @@
+#!/usr/bin/expect
+
+set timeout 30
+
+# 从环境变量中获取：跳板机信息
+set jump_args [split $env(JUMP) |]
+set jump_port [lindex $jump_args 0]
+set jump_user [lindex $jump_args 1]
+set jump_host [lindex $jump_args 2]
+set jump_passwd [lindex $jump_args 3]
+
+# 从环境变量中获取：内网目标服务器信息
+set dest_args [split $env(DEST) |]
+set dest_port [lindex $dest_args 0]
+set dest_host [lindex $dest_args 1]
+set local_port [lindex $dest_args 2]
+
+# 如果 local_port 为空或未设置，则使用 dest_port 作为默认值
+if {$local_port eq ""} {
+    set local_port $dest_port
+}
+
+# 使用 ProxyCommand 方式建立隧道：本地端口 -> 跳板机 -> 内网目标
+spawn ssh -o "StrictHostKeyChecking=no" \
+          -o "UserKnownHostsFile=/dev/null" \
+          -L $local_port:$dest_host:$dest_port \
+          -p $jump_port \
+          -N \
+          $jump_user@$jump_host
+
+# 处理跳板机连接过程
+expect {
+    timeout {
+        puts stderr ">>> 失败：连接跳板机超时"
+        exit 1
+    }
+    eof {
+        puts stderr ">>> 失败：连接跳板机失败 (EOF)"
+        exit 1
+    }
+    "(yes/no)?" {
+        send "yes\r"
+        exp_continue
+    }
+    "password:" {
+        stty -echo
+        send "$jump_passwd\r"
+        stty echo
+    }
+}
+
+# 隧道建立成功，保持连接
+puts "\n>>> SSH 隧道已建立！"
+puts ">>> 本地端口 $local_port 已映射到远程 $dest_host:$dest_port"
+puts ">>> FTP 客户端请连接：FTP://localhost:$local_port"
+puts ">>> Ctrl+C 可关闭隧道\n"
+
+# 保持隧道运行
+interact

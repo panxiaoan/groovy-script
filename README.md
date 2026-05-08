@@ -47,6 +47,32 @@ groovy clean-mvn-repository.groovy
 
 1. 将 `iTerm2Login.sh` 脚本文件放到 `/usr/local/bin` 目录
 2. 授权：`chmod a+x iTerm2Login.sh`
-3. 打开 iTerm 并设置： Settings → Profiles → General
+3. 打开 iTerm 并配置连接： Settings → Profiles → General
     - Command: Login Shell
-    - Send text at start: iTerm2Login.sh `port` `user` `ip` `password`
+    - Send text at start: ARGS='`port`|`user`|`ip`|`passwd`' iTerm2Login.sh
+
+## iTerm2Tunnel.sh
+
+用于 macOS 中 iTerm Terminal 工具使用跳板机登录到目标服务器
+
+使用方法：
+
+1. 将 `iTerm2Tunnel.sh` 脚本文件放到 `/usr/local/bin` 目录
+2. 授权：`chmod a+x iTerm2Tunnel.sh`
+3. 打开 iTerm 并配置连接： Settings → Profiles → General
+    - Command: Login Shell
+    - Send text at start: DEST='`port`|`user`|`ip`|`passwd`' JUMP='`port`|`user`|`ip`|`passwd`' iTerm2Tunnel.sh 
+
+## ssh_tunnel.exp
+
+用于 macOS 中 iTerm Terminal 工具使用跳板机登录到 FTP 服务器
+
+使用方法：
+
+1. 将 `ssh_tunnel.exp` 脚本文件放到 `/usr/local/bin` 目录
+2. 授权：`chmod a+x ssh_tunnel.exp`
+3. 打开 iTerm 并配置隧道连接： Settings → Profiles → General
+    - Command: Login Shell
+    - Send text at start: DEST='`port`|`ip`' JUMP='`port`|`user`|`ip`|`passwd`' ssh_tunnel.exp
+4. 在 iTerm 中打开隧道连接
+5. 打开 SFTP 客户端，并配置 FTP 连接： `ftp://localhost:$local_port`

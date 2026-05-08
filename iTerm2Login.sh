@@ -2,11 +2,13 @@
 
 set timeout 30
 
-# 获取参数
-set port [lindex $argv 0]
-set user [lindex $argv 1]
-set host [lindex $argv 2]
-set password [lindex $argv 3]
+# 安全地获取参数（防止特殊字符被提前解析）
+set args [split $env(ARGS) |]
+
+set port [lindex $args 0]
+set user [lindex $args 1]
+set host [lindex $args 2]
+set password [lindex $args 3]
 
 spawn ssh -p $port $user@$host
 
@@ -16,10 +18,8 @@ expect {
         exp_continue
     }
     "password:" {
-        # 关闭终端回显
         stty -echo
         send "$password\r"
-        # 恢复终端回显
         stty echo
     }
 }
