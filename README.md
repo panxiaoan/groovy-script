@@ -30,13 +30,23 @@ groovy -v
 groovy clean-mvn-repository.groovy
 ```
 
-## gitpull.sh
+## pullall.sh
 
 批量更新当前目录下的所有 git 项目
 
-在命令行运行脚本：
-```bash
-./gitpull.sh
+1. 将 `gitpull.sh` 脚本文件放到 `/usr/local/bin` 目录
+2. 授权：`chmod a+x gitpull`
+3. 在命令行中运行：`gitpull`, 即可完成更新
+
+```shell
+# 复制
+sudo sh -c 'cp ./gitpull.sh /usr/local/bin/gitpull && chmod a+x /usr/local/bin/gitpull'
+
+# 快速更新, 带 --depth=1
+gitpull
+
+# 完整更新
+gitpull --full
 ```
 
 ## iTerm2Login.sh
